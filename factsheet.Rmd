@@ -1,0 +1,47 @@
+---
+title: "Sheffield Factsheet"
+author: "BI Team, Sheffield City Council"
+# date: "14 December 2018"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+library(tidyverse)
+library(httr)
+library(jsonlite)
+library(kableExtra)
+source("libraries/ons-datasets-beta.R")
+source("factsheet-data.R")
+# TODO(Laurie Platt): Fix the R Studio Knit button rather than using the following in the console:  rmarkdown::render("factsheet.Rmd", output_file='output/factsheet.html')
+```
+
+# Area
+
+TODO
+
+# People
+
+```{r escape, echo = FALSE}
+# The copyright symbol in the markdown below requires a preceding 
+# backslash as an escape character so that it is parsed correctly
+```
+*Source: 2016 Mid-Year Population Estimate (ONS) \© Crown Copyright*
+
+```{r people_data, echo = FALSE}
+
+# Get the data we need to display
+people_data <- GetPeopleData()
+
+# Display the data in a table
+people_tbl <- knitr::kable(people_data, format = "html")
+
+# Remove the column headers
+people_tbl <- gsub("<thead>.*</thead>", "", people_tbl)
+
+# Apply a style to the table
+kable_styling(people_tbl, bootstrap_options = c("striped", "hover"))
+# TODO(Laurie Platt): .Rmd variable for the table style to applied across the factsheet,
+#                     or have tables included in the CSS?
+```
+
+

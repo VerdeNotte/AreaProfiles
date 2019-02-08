@@ -1,0 +1,243 @@
+---
+title: "ONS APIs"
+author: "BI Team, Sheffield City Council"
+date: "14 December 2018"
+output:
+  html_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: no
+  pdf_document: 
+    toc: yes
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+This work has been done to support the Sheffield Council BI Team's **Area Profiles** project led by **Dan Taylor**. In particular, this is an exploration of how we might use R and the ONS APIs to produce the Area Profiles, instead of them being manually updated. A parallel task is the user research into the content of the Area Profiles. For now, this exercise is focused on reproducing some of the existing Area Profile content in a more efficient manner.  
+
+A secondary objective is to use this work as an introductory **learning exercise** for R, R Studio, working collaboratively etc. I've tried to document as I go, with the intention of the rest of the team being able to understand what I've done and then suggest and work on improvements to my initial attempts. I'm also doing this to improve my retention of what I've learnt (!) and I wonder if this will be an effective way for us document our data science work when it becomes more technical.
+
+The last section, "Further Work", includes some opportunities for us to learn how to code collaboratively. Something we need to do if we want to be able to apply more than a single person to the coding element of a project.
+
+## Getting Started with R and R Studio
+
+The DataCamp Introduction to R might be the best place to start:  
+https://www.datacamp.com/courses/free-introduction-to-r  
+
+This is the book that Giles recommended and it is really good:  
+https://r4ds.had.co.nz/  
+
+Different learning roadmap videos from RStudio:  
+https://resources.rstudio.com/  
+
+TODO(Laurie Platt): project file.  
+
+## R Markdown
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button in R Studio, a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+The R Markdown file (*ons-apis.Rmd*) that generated this document, the YAML header at the top of the R Markdown file  and the text above in this sub-heading, were initially created by R Studio via *File > New File > R Markdown*. I've then amended the file and used the [R Markdown chapter in R for Data Science](https://r4ds.had.co.nz/r-markdown.html) as a reference. I've also used the [R Markdown Definitive Guide](https://bookdown.org/yihui/rmarkdown/basics.html) and it's worth printing out the [R Markdown cheat sheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf) from R Studio and having it to hand.
+  
+TODO(Laurie Platt): version for peers and version for end user.
+
+Tip: Double space at the end of a line to begin a new paragraph.  
+
+# Sheffield Factsheet
+
+Rather than jumping into the Area Profiles, I've started with the smaller and simpler [Sheffield Factsheet](https://www.sheffield.gov.uk/content/dam/sheffield/docs/your-city-council/facts-figures/Sheffield%20Factsheet%20v1.pdf): 
+![Sheffield Factsheet](./images/SheffieldFactsheetV1.pdf){width=65%}
+
+I've only attempted to reproduce two sub-headings from the factsheet i.e. "People" ~~and "Claimant Count"~~.  
+
+I'm not sure yet whether the ONS APIs are mature enough for this approach to be worthwhile for the factsheet. Unlike the factsheet, the Area Profiles work is repeated across 28 Wards and each one has a lot more content. This increases the potential for efficiency gains from using the ONS APIs.
+
+# ONS APIs
+
+The ONS (Office of National Statistics) has several APIs (Application Programming Interfaces) that allow developers to access ONS data:  
+&nbsp;&nbsp;1. ONS API  
+&nbsp;&nbsp;2. ONS Beta API  
+&nbsp;&nbsp;3. NOMIS API  
+
+NOMIS is an ONS service that provides labour market statistics.  
+
+ONS Beta API is an improved version of the original ONS API. The beta is less stable and currently covers less content than the original. ~~Nevertheless, where possible, I recommend using the beta, or NOMIS, over the original API.~~  
+
+In comparison with the excellent resources supporting R and R Studio, trying to understand the ONS APIs has been more frustrating. Hopefully, this document will minimise the team's aggregated frustration, but please be more challenging of my ONS API explanations and let me know when I'm wrong.
+
+## Querying APIs in R
+
+[Querying APIs in R, blogged by Trafford Data Lab](https://medium.com/@traffordDataLab/querying-apis-in-r-39029b73d5f1) on Medium is a really simple, short and helpful introduction to accessing data in R via APIs. Better to read the blog than me providing a precis of it. You'll see bits of code from the blog used in this project.
+
+[Web API Updates for R - RStudio Webinar](https://youtu.be/MAZic778uOw) provides more technical detail and in particular it provides some background into how data is requested and returned via the web protocol i.e. http.
+
+[Accessing APIs from R, on R-bloggers](https://www.r-bloggers.com/accessing-apis-from-r-and-a-little-r-programming/) provides more background and detail.
+
+Again, from Trafford Data Lab, their [Open Data companion](https://www.trafforddatalab.io/open_data_companion/) provides further pointers to potentially relevant APIs.  
+
+## Proxy Server Settings
+
+Working at home I was able to access the ONS API from R Studio. However, within the office I got the following error message:  
+`Failed to connect to api.beta.ons.gov.uk port 443: Timed out`  
+
+I am able to access the API via my browser, e.g.:  
+https://api.beta.ons.gov.uk/v1/datasets/mid-year-pop-est/editions/time-series/versions/2/dimensions
+
+So I think I need to configure proxy settings in R Studio. Unfortunately there doesn’t seem to be an option to inherit these from the browser. There’s some information about how to do it here, but I don’t know enough about our proxy settings or have access to them:  
+https://support.rstudio.com/hc/en-us/articles/200488488-Configuring-R-to-Use-an-HTTP-or-HTTPS-Proxy
+
+TODO(Laurie Platt): Issue is logged with Capita. Complete once fixed
+
+## Tidyverse
+
+## ONS API
+
+<https://developer.ons.gov.uk/office-for-national-statistics-api/reference>  
+
+TODO(Laurie Platt): explanation of script (package?) that produces a spreadsheet list the datasets available
+
+## ONS Beta API
+
+<https://developer.beta.ons.gov.uk/>  
+
+The ONS Digital blog on [Using the new Beta ONS API](https://digitalblog.ons.gov.uk/2018/05/24/using-the-new-beta-ons-api/) is the best outline of the beta that I've found, but is limited.
+
+The first thing we need to do is find information about the data we need from the ONS. For this we need to use the [beta API reference](<https://developer.beta.ons.gov.uk/>) noted at the top of this sub-heading. Key to understanding how to structure our exploration is the following explanation from the beta API reference:  
+
+> `Datasets` are published in unique `versions`, which are categorized by `edition`. Data in each version is broken down by `dimensions`, and a unique combination of dimension `options` in a version can be used to retrieve `observation` level data.  
+
+I've read the above several times and put it in to practice. However, I still don't think I've fully understood it! The People Data sub-heading below provides an example of how to explore the ONS data via the beta API. 
+
+TODO(Laurie Platt): Two methods of getting data
+
+## NOMIS API
+
+<https://www.nomisweb.co.uk/api/v01/help>  
+
+# Factsheet Output
+
+## Factsheet ONS Data
+
+### People Data
+
+
+
+## Factsheet Markdown
+
+TODO(Laurie Platt): The Factsheet Markdown file etc.
+
+We've started a discussion with Martin Riggall's Digital Services team about how we might include dynamic content on the Council's internet. Currently, just as the Area Profiles are produced manually, there is a manual process of passing the updated files to Digital Services and them adding them to the Council's internet. Everyone is to busy for this to be sustainable, so we want to be able to have control over the content of a frame within a page. The look and feel of the content is for Digital Services to decide, or at least approve. It may be as simple as us applying one of their  style sheets to the markdown.  
+
+Now we have some example content, we can meet with Digital Services to discuss the best solution e.g. the html, an embedded shiny app, or another option such as the markdown importer for AEM (the Council's Web CMS) that Nicola has found: https://github.com/adobe/aem-importer-markdown
+
+# Area Profiles
+
+
+# R Studio - Further Orientation
+
+## Keyboard Shortcuts
+
+The [R Studio IDE cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/rstudio-ide.pdf) lists lots of keyboard shortcuts on the second page. Here are some of the ones I've already started using: 
+
+*Ctrl+Shift+C* to block comment/uncomment code
+
+Initially I was using:  
+*Ctrl+A* to select all code  
+*Ctrl+S* to save the code  
+*Ctrl+Enter* to run the code  
+However I now tend to use just:    
+*Ctrl+Shift+S* to source the current file
+
+*Ctrl+Shift+O* to show the document outline (particularly helpful for navigating the *ons-apis.Rmd* file in this project).  
+*Ctrl+Shift+1*  to zoom source  
+*Ctrl+Shift+Alt+0*  to show all panes  
+I might not need these last two when I upgrade my monitor at home or I'm working in the office.
+
+*Ctrl+Shift+K* to Knit an R Markdown file  
+*Ctrl+Shift+M* to add a R Markdown chunk
+
+*Shift+F9* to add a breakpoint for debugging
+
+## Debugging
+
+In R Studio adding a breakpoint means that the next time the code is run it will automatically enter debugging mode. This is different to most IDEs where you have to explicitly choose to run in debug mode.
+
+TODO(Laurie Platt): complete
+
+# Conventions
+
+I propose that we all adhere to a style guide for our R code. I am less concerned about which one we use, just that we use the same one. A suggestion is [Hadley Wickham's style guide](http://adv-r.had.co.nz/Style.html) which is based on [Google’s R style guide](https://google.github.io/styleguide/Rguide.xml). Hadley also suggests using the formatR package to help clean up poorly formatted code, but he advises that we read the [formatR introduction](https://yihui.name/formatr/) before using it.
+
+There are other pieces of "best practice" that we may choose to follow, such as a template (code snippet in R Studio) for function and script headers. I've copied formats I found via Google, but I haven't spent long looking into what are the best templates.
+
+How we structure sub-folders within a project, document projects and where we file them are other matters it might be worth getting a consensus on. 
+
+# Further Work
+
+## Generic R Project Work
+
+### GitHub
+
+Using version control systems was part-and-parcel of any coding I've done as a team. Allowing us to work in parallel, logging reasons for changes and automatically backing up our work. I'm convinced we need something similar for our work and it seems that it is standard practice for data science. GitHub appears to be the most popular option.
+
+[Happy Git and GitHub for the useR](http://happygitwithr.com/) provides a fuller justification for using GitHub for R data science projects and detail on how to implement it.   
+
+[The “Git and GitHub” chapter of R Packages](http://r-pkgs.had.co.nz/git.html), by Hadley.
+
+I need to switch my focus to the Trauma project, but I will be able to continue to chip away at some of items in this Further Work section. For example, the first thing I'd look to do is set up this small project on GitHub. It will take about half a day and I can do it whilst I'm in sometime over the Christmas period. Although, similar to the rest of the learning in this project, familiarity with some of the concepts is helpful but I don't have any GitHub experience. If someone else would like to get stuck in and setup this project on GitHub please let me know.
+
+As with anything, actually trialing GitHub will be the best way to understand whether it's something we should be using for our projects. GitHub is free to use for public repositories, which is fine for this project as it has no sensitive data or business logic. However, if we want to use it for another more sensitive project we might need to restrict access to our team or Council. This level of functionality incurs a charge, so our cost benefit assessment of whether to use GitHub will need to include financial costs as well as time costs.
+
+Once this project is setup on GitHub, the other items listed in this Further Work section would be listed and maintained via GitHub "Issues".
+
+### Error Handling
+
+### Log Files
+
+### Packrat
+
+If you want your code to be reproducible in the long-run (i.e. so you can come back to run it next month or next year), you’ll need to track the versions of the packages that your code uses. A rigorous approach is to use packrat, http://rstudio.github.io/packrat/, which stores packages in your project directory, or checkpoint, https://github.com/RevolutionAnalytics/checkpoint, which will reinstall packages available on a specified date. A quick and dirty hack is to include a chunk that runs sessionInfo() — that won’t let you easily recreate your packages as they are today, but at least you’ll know what they were.
+
+### Docker
+
+TODO(Laurie Platt):
+https://blog.revolutionanalytics.com/2018/03/r-and-docker.html
+
+### formatR
+
+## Add More Factsheet Content 
+
+### Additional Sub-Headings
+
+### Time Series
+
+Dan has been quick to highlight that the most obvious improvement to the Area Profiles is to include time trends. The ONS APIs make this eminently possible. TODO(Laurie Platt): Add link
+
+## R Markdown Output
+
+### Parameters
+
+TODO(Laurie Platt):  
+https://stackoverflow.com/questions/18929782/how-can-i-pass-variables-into-an-r-markdown-rmd-file  
+Install shiny
+
+### ECHO
+
+TODO(Laurie Platt) - if you were preparing a report, you might set:  
+knitr::opts_chunk$set(
+  echo = FALSE
+)
+
+
+
